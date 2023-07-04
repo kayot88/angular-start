@@ -1,0 +1,14 @@
+<p class="text-lg">{{ product.title }}</p>
+<img [src]="product.image" [alt]="product.title" class="w-full" />
+<button
+  (click)="details = !details"
+  [ngClass]="{
+    'bg-blue-500': details,
+    'bg-yellow-300': !details
+  }"
+>
+  {{ details ? "Hide" : "Show" }} details
+</button>
+<p *ngIf="details">
+  {{ product.description }}
+</p>
