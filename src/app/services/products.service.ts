@@ -7,12 +7,18 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, delay, retry, tap, throwError } from 'rxjs';
 import { IProduct } from '../models/products';
 import { ErrorService } from './error.service';
+import { Store } from '@ngrx/store';
+import { getProductsAction, setProductAction } from '../components/products/actions/products.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
-  constructor(private http: HttpClient, private errorService: ErrorService) {}
+  constructor(
+    private store: Store<{ products: IProduct[] }>,
+    private http: HttpClient,
+    private errorService: ErrorService
+  ) {}
   private errorHandler(error: HttpErrorResponse) {
     this.errorService.handlerError(error.message);
     return throwError(() => this.errorService.error$ || 'Server Error');
@@ -27,7 +33,8 @@ export class ProductsService {
       .pipe(
         tap((products) => {
           console.log(products);
-          this.products = products;
+          // this.products = products;
+          this.store.dispatch(getProductsAction({ products }));
         }),
         catchError(this.errorHandler.bind(this))
       );
@@ -36,7 +43,10 @@ export class ProductsService {
     return this.http
       .post<IProduct>('https://fakestoreapi.com/products', product)
       .pipe(
-        tap((prod) => this.products.push(prod)),
+        tap((prod) => {
+          this.store.dispatch(setProductAction({product: prod}));
+          // this.products.push(prod)
+        }),
         catchError(this.errorHandler.bind(this))
       );
   }

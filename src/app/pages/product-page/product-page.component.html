@@ -6,12 +6,12 @@
   />
   <h1 class="flex justify-center font-bold mt-2">{{ title | titlecase }}</h1>
   <p *ngIf="loading">Loading...</p>
-  <div *ngIf="productService.products">
+  <div *ngIf="products$ | async">
     <div>
       <button (click)="modalService.open()">add</button>
     </div>
     <app-products
-      *ngFor="let product of productService.products | filterProducts : term; let i = index"
+      *ngFor="let product of products$ | async; let i = index"
       [product]="product"
     ></app-products>
   </div>

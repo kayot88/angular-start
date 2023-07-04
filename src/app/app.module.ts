@@ -15,6 +15,10 @@ import { FocusDirective } from './directives/focus.directive';
 import { ProductPageComponent } from './pages/product-page/product-page.component';
 import { AboutPageComponent } from './pages/about-page/about-page.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { reducers } from './components/products/reducers';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,16 +30,21 @@ import { NavigationComponent } from './components/navigation/navigation.componen
     FocusDirective,
     ProductPageComponent,
     AboutPageComponent,
-    NavigationComponent
+    NavigationComponent,
   ],
   imports: [
     BrowserModule,
+    StoreModule.forRoot(reducers),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      // logOnly: environment.production,
+    }),
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
